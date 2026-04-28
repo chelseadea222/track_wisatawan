@@ -27,6 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['role'];
 
+                // Set cookie untuk login checking
+                setcookie('role', $user['role'], time() + (86400 * 30), '/');
+
                 $target_url = (strtolower($user['role']) === 'admin') ? 'tiket_harian.php' : 'tiket.php';
                 
                 if (!headers_sent()) {
