@@ -3,14 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Hapus semua session
+// Hapus semua session data
+session_unset();
 session_destroy();
-
-// Hapus semua cookies
-setcookie('user_id', '', time() - 3600, "/");
-setcookie('nama', '', time() - 3600, "/");
-setcookie('email', '', time() - 3600, "/");
-setcookie('role', '', time() - 3600, "/");
 
 header("Location: login.php");
 exit;
