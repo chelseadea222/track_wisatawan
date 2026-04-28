@@ -14,7 +14,7 @@ require_once __DIR__ . '/proses_tiket_harian.php';
 
 // Hapus atau perbaiki logika ini. 
 // Biasanya halaman ini justru HARUS diakses jika sudah login sebagai admin.
-if (!isset($_COOKIE['role']) || $_COOKIE['role'] !== 'admin') {
+if (!isset($_COOKIE['role']) || strtolower($_COOKIE['role']) !== 'admin') {
     header("Location: login.php");
     exit();
 }

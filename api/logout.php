@@ -1,4 +1,12 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Hapus semua session
+session_destroy();
+
+// Hapus semua cookies
 setcookie('user_id', '', time() - 3600, "/");
 setcookie('nama', '', time() - 3600, "/");
 setcookie('email', '', time() - 3600, "/");

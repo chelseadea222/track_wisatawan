@@ -27,10 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['role'];
 
-                // Set cookie untuk login checking
-                setcookie('role', $user['role'], time() + (86400 * 30), '/');
+                // Set cookie untuk login checking - normalize ke lowercase
+                $role_normalized = strtolower($user['role']);
+                setcookie('role', $role_normalized, [
+                    'expires' => time() + (86400 * 30),
+                    'path' => '/',
+                    'secure' => isset($_SERVER['HTTPS']),
+                    'httponly' => false,
+                    'samesite' => 'Lax'
+                ]);
 
-                $target_url = (strtolower($user['role']) === 'admin') ? 'tiket_harian.php' : 'tiket.php';
+                $target_url = ($role_normalized === 'admin') ? 'tiket_harian.php' : 'tiket.php';
                 
                 if (!headers_sent()) {
                     header("Location: " . $target_url);
