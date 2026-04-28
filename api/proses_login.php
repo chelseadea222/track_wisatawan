@@ -21,25 +21,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Pengecekan password
             if ($user && password_verify($password, $user['password'])) {
-                // Set session
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['nama'] = $user['nama'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = strtolower($user['role']);
+                // Normalize role
+                $role = strtolower($user['role']);
                 
-                // Debug: pastikan session tersimpan
-                session_write_close();
-                session_start();
-
-                $role = $_SESSION['role'] ?? 'user';
-                $target_url = ($role === 'admin') ? 'tiket_harian.php' : 'tiket.php';
-                
-                if (!headers_sent()) {
-                    header("Location: " . $target_url);
-                    exit;
+                // Validasi role harus admin atau user
+                if ($role !== 'admin' && $role !== 'user') {
+                    $error = 'Role pengguna tidak valid. Hubungi administrator.';
                 } else {
-                    echo "<script>window.location.href='" . $target_url . "';</script>";
-                    exit;
+                    // Set session
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['nama'] = $user['nama'];
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['role'] = $role;
+
+                    // Tentukan target URL berdasarkan role
+                    $target_url = ($role === 'admin') ? 'tiket_harian.php' : 'tiket.php';
+                    
+                    if (!headers_sent()) {
+                        header("Location: " . $target_url);
+                        exit;
+                    } else {
+                        echo "<script>window.location.href='" . $target_url . "';</script>";
+                        exit;
+                    }
                 }
             } else {
                 $error = 'Email atau password salah!';

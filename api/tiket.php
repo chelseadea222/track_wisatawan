@@ -3,20 +3,25 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Cek apakah user sudah login
+// Cek apakah user sudah login dengan session valid
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role'])) {
     header("Location: login.php");
     exit();
 }
 
-// Cek apakah role bukan admin (redirect admin ke dashboard mereka)
-if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+// Jika admin, redirect ke dashboard mereka
+if ($_SESSION['role'] === 'admin') {
     header("Location: tiket_harian.php");
     exit();
 }
 
+// Jika bukan user, reject
+if ($_SESSION['role'] !== 'user') {
+    header("Location: login.php");
+    exit();
+}
+
 require_once __DIR__ . '/../api/proses_tiket.php';
-// kalau sudah login, langsung ke tiket harian
 ?>
 <!DOCTYPE html>
 <html lang="id">

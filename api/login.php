@@ -6,18 +6,26 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Prevent cache untuk login page
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 require_once __DIR__ . '/proses_login.php';
 
-if (isset($_SESSION['user_id'])) {
+// Cek jika user sudah login dengan session yang valid
+if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && isset($_SESSION['nama'])) {
+    // Validasi role
     if ($_SESSION['role'] === 'admin') {
         header('Location: tiket_harian.php');
         exit;
-    } else {
+    } else if ($_SESSION['role'] === 'user') {
         header('Location: tiket.php');
         exit;
     }
+    // Jika role tidak valid, lanjut ke form login
 }
-// kalau sudah login, langsung ke tiket harian
+// kalau belum login, tampilkan form login
 ?>
 <!DOCTYPE html>
 <html lang="id">
