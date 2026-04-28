@@ -1,15 +1,12 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// Untuk Vercel Production
+$host     = getenv('TIDB_HOST') ?: 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com';
+$port     = getenv('TIDB_PORT') ?: 4000;
+$db_name  = getenv('TIDB_DATABASE') ?: 'Tiket_Harian';
+$username = getenv('TIDB_USER') ?: 'your_tidb_username';
+$password = getenv('TIDB_PASSWORD') ?: 'your_tidb_password';
 
-$host     = getenv('TIDB_HOST');
-$port     = getenv('TIDB_PORT');
-$db_name  = getenv('TIDB_DATABASE');
-$username = getenv('TIDB_USER');
-$password = getenv('TIDB_PASSWORD');
-
-// Mencari lokasi sertifikat SSL bawaan server Vercel (Amazon Linux / Debian)
+// Mencari lokasi sertifikat SSL
 $ca_path = '/etc/ssl/certs/ca-certificates.crt'; 
 if (!file_exists($ca_path)) {
     $ca_path = '/etc/pki/tls/certs/ca-bundle.crt'; 
@@ -20,7 +17,6 @@ try {
     $pdo = new PDO($dsn, $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        // Dua baris di bawah ini WAJIB untuk TiDB Serverless
         PDO::MYSQL_ATTR_SSL_CA => $ca_path,
         PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
     ]);
