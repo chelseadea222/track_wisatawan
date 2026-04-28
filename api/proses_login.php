@@ -26,8 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['nama'] = $user['nama'];
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = strtolower($user['role']);
+                
+                // Debug: pastikan session tersimpan
+                session_write_close();
+                session_start();
 
-                $target_url = ($_SESSION['role'] === 'admin') ? 'tiket_harian.php' : 'tiket.php';
+                $role = $_SESSION['role'] ?? 'user';
+                $target_url = ($role === 'admin') ? 'tiket_harian.php' : 'tiket.php';
                 
                 if (!headers_sent()) {
                     header("Location: " . $target_url);
