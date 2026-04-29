@@ -13,7 +13,7 @@ require_once __DIR__ . '/proses_tiket_harian.php';
 
 
 // Cek apakah user sudah login dan memiliki role admin
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['role']) || strtolower($_SESSION['role']) !== 'admin') {
     header("Location: login.php");
     exit();
 }

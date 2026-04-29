@@ -37,6 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Tentukan target URL berdasarkan role
                     $target_url = ($role === 'admin') ? 'tiket_harian.php' : 'tiket.php';
                     
+                    // Pastikan session tersimpan sebelum redirect
+                    session_write_close();
+                    
                     if (!headers_sent()) {
                         header("Location: " . $target_url);
                         exit;
